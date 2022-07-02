@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 
 import {
-BrowserRouter as Router,
-useNavigate,
 Navigate,
-Routes,
-Route,
 } from "react-router-dom";
 import "./login.css";
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 function Login() {
   // React States
@@ -41,10 +39,23 @@ function Login() {
         if (response.status === 200) {
         	return response.json();
         } else {
-        	alert("Login Gagal");
         }
     }).then(function (json) {
-        localStorage.setItem("user", JSON.stringify(json));
+		const MySwal = withReactContent(Swal);
+
+		console.log(json);
+        if (typeof json === 'undefined') {
+			Swal.fire({
+				position: 'center',
+				icon: 'error',
+				title: 'Login Failed !',
+				showConfirmButton: false,
+				timer: 1500
+			});
+		}else {
+			localStorage.setItem("user", JSON.stringify(json));
+		window.location.href = '/';
+		}
     });
     // Compare user info
     // if (userData) {
@@ -68,34 +79,43 @@ function Login() {
 
   // JSX code for login form
 const renderForm = (
-    <div className="form">
-    	<form onSubmit={handleSubmit}>
-        <div className="input-container">
-        <label>Email </label>
-        <input type="email" name="email" required />
-        {renderErrorMessage("email")}
+    // <div className="form">
+    // 	<form onSubmit={handleSubmit}>
+    //     <div className="input-container">
+    //     <label>Email </label>
+    //     <input type="email" name="email" required />
+    //     {renderErrorMessage("email")}
+    //     </div>
+    //     <div className="input-container">
+    //     <label>Password </label>
+    //     <input type="password" name="password" required />
+    //     {renderErrorMessage("password")}
+    //     </div>
+    //     <div className="button-container">
+    //     <input type="submit" />
+    //     </div>
+    // </form>
+    // </div>
+	<section className="area-login">
+        <h1>Login YukPilih</h1>
+        <div className="login">
+    	<div>
         </div>
-        <div className="input-container">
-        <label>Password </label>
-        <input type="password" name="password" required />
-        {renderErrorMessage("password")}
+        <form onSubmit={handleSubmit}>
+            <input type="email" name="email" required  placeholder="You're Email !" autoFocus />
+            <input type="password" name="password" required  placeholder="Password" />
+            <input type="submit" defaultValue="enter" />
+        </form>
+        <p>Dont Have Account ? <a href="/register">Register</a></p>
         </div>
-        <div className="button-container">
-        <input type="submit" />
-        </div>
-    </form>
-    </div>
+    </section>
 );
 
 const loggedInUser = localStorage.getItem("user");
-if (loggedInUser === null) {
+console.log(loggedInUser);
+if (loggedInUser === null || loggedInUser == null) {
     return (
-    <div className="Login">
-        <div className="login-form">
-        	<div className="title">Sign In</div>
-        	{isSubmitted ? <div>User is successfully logged in</div> : renderForm}
-        </div>
-    </div>
+		renderForm
     );
 	} else {
     return <Navigate to="/" />;

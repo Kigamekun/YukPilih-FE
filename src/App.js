@@ -95,6 +95,7 @@ import { BrowserRouter as Router, Routes, Route}
 
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Register from './pages/Register';
 
 class App extends Component {
   render() {
@@ -103,6 +104,7 @@ class App extends Component {
       <Routes>
           <Route exact path='/'  element={<Home />} />
           <Route path='/login' element={<Login/>} />
+          <Route path='/register' element={<Register/>} />
       </Routes>
       </Router>
     );

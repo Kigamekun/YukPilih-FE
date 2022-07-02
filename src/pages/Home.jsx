@@ -3,11 +3,7 @@ import React, { Component } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import {
-  BrowserRouter as Router,
-  useNavigate,
   Navigate,
-  Routes,
-  Route,
 } from "react-router-dom";
 import Login from "./Login";
 
@@ -48,9 +44,9 @@ class Card extends React.Component {
     return (
       <div className="card">
         <div className="card-body">
-          <h2>{this.props.title}</h2>
+          <h2 >{this.props.title}</h2>
           <p>{this.props.description}</p>
-          <h5>{this.props.deadline}</h5>
+          
           <div
             style={{
               display: "flex",
@@ -60,7 +56,7 @@ class Card extends React.Component {
           >
             {Object.keys(choices).map((element) => (
               // <a style={{margin:'10px'}}  href={'http://127.0.0.1:8000/api/poll/' + this.props.id + '/vote/' + element}>{choices[element]}</a>
-              <button
+              <button className="btn btn-primary"
                 data-id={this.props.id}
                 data-choices_id={element}
                 style={{ margin: "10px" }}
@@ -70,6 +66,7 @@ class Card extends React.Component {
               </button>
             ))}
           </div>
+          <h5>{this.props.deadline}</h5>
         </div>
       </div>
     );
@@ -85,7 +82,8 @@ class Home extends Component {
   }
 
   componentDidMount() {
-    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+    try {
+      const loggedInUser = JSON.parse(localStorage.getItem("user"));
 
     fetch("http://127.0.0.1:8000/api/poll", {
       headers: {
@@ -100,6 +98,9 @@ class Home extends Component {
           data: json.data,
         });
       });
+    } catch (error) {
+      
+    }
   }
 
   renderPoll(item, index) {
@@ -114,6 +115,11 @@ class Home extends Component {
     );
   }
 
+  logout() {
+    localStorage.clear();
+    window.location.href = '/';
+  }
+
   render() {
     const loggedInUser = localStorage.getItem("user");
 
@@ -122,8 +128,9 @@ class Home extends Component {
     } else {
       return (
         <>
-          <div class="header">
-            <h1>Pool List</h1>
+          <div className="header">
+            <h1 style={{color:'white'}}>YukPilih Pool List</h1>
+            <button className="btn btn-outline-danger" onClick={this.logout}>Logout</button>
           </div>
           <div className="cards">{this.state.data.map(this.renderPoll)}</div>
         </>
